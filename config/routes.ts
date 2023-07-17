@@ -28,6 +28,53 @@ export default [
     icon: 'smile',
     component: './Welcome',
   },
+
+  {
+    name: 'agreements',
+    icon: 'table',
+    path: '/agreements/:id',
+    component: './Agreement',
+  },
+  {
+    name: 'proposals',
+    icon: 'table',
+    path: '/proposals',
+    component: './Proposal',
+  },
+  {
+    name: 'analytics',
+    icon: 'table',
+    path: '/analytics',
+    component: './Analytics',
+  },
+  {
+    name: 'calendar',
+    icon: 'table',
+    path: '/calendar',
+    component: './Calendar',
+  },
+  {
+    name: 'configure',
+    icon: 'table',
+    path: '/configure',
+    routes: [
+      {
+        path: '/configure',
+        name: 'Agreements',
+        component: './Configure',
+      },
+      {
+        path: '/configure/fields',
+        name: 'Fields',
+        component: './Configure/Fields',
+      },
+      {
+        path: '/configure/master-data',
+        name: 'Master Data',
+        component: './Configure/MasterData',
+      },
+    ],
+  },
   {
     path: '/admin',
     name: 'admin',
@@ -44,12 +91,6 @@ export default [
         component: './Admin',
       },
     ],
-  },
-  {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
   },
   {
     path: '/',

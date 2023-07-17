@@ -3,13 +3,14 @@ import { Question, SelectLang } from '@/components/RightContent';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
-import type { RunTimeLayoutConfig } from '@umijs/max';
-import { history, Link } from '@umijs/max';
+import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
+import { history, Link, useModel } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
+import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
 import { errorConfig } from './requestErrorConfig';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
-import React from 'react';
-import { AvatarDropdown, AvatarName } from './components/RightContent/AvatarDropdown';
+import { getStorage } from './utils';
+import Agreement from '@/pages/Agreement';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -24,10 +25,19 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
+      const userInfoStorage = getStorage('userInfo');
+      if (userInfoStorage) {
+        return userInfoStorage;
+      }
+
       const msg = await queryCurrentUser({
         skipErrorHandler: true,
       });
-      return msg.data;
+      if (msg.data) {
+        return msg.data;
+      } else {
+        return userInfoStorage;
+      }
     } catch (error) {
       history.push(loginPath);
     }
@@ -37,6 +47,7 @@ export async function getInitialState(): Promise<{
   const { location } = history;
   if (location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
+    console.log(currentUser, 'currentUser');
     return {
       fetchUserInfo,
       currentUser,
@@ -51,21 +62,42 @@ export async function getInitialState(): Promise<{
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+  // const { getTypeCount } = useModel('agreement');
   return {
     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {
-      src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
       render: (_, avatarChildren) => {
-        return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
+        return <AvatarDropdown menu={true}>{avatarChildren}</AvatarDropdown>;
+      },
+    },
+    menu: {
+      // 每当 initialState?.currentUser?.userid 发生修改时重新执行 request
+      params: {
+        userId: initialState?.currentUser?.id,
+      },
+      request: async (params, defaultMenuData) => {
+        // initialState.currentUser 中包含了所有用户信息
+        // console.log(defaultMenuData, 'defaultMenuData');
+        // const menuData = await getTypeCount();
+        // let agreementRouteIndex = defaultMenuData.findIndex((item) => item.name === 'agreements');
+        // defaultMenuData[agreementRouteIndex].routes = menuData?.map((item) => {
+        //   return {
+        //     path: `/agreements/${item.name.toLowerCase()}`,
+        //     name: `${item.name} (${item.count})`,
+        //   };
+        // });
+        // console.log(defaultMenuData, 'defaultMenuData');
+        return defaultMenuData;
       },
     },
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.user,
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
+
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath);
@@ -131,6 +163,21 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  * 它基于 axios 和 ahooks 的 useRequest 提供了一套统一的网络请求和错误处理方案。
  * @doc https://umijs.org/docs/max/request#配置
  */
-export const request = {
+export const request: RequestConfig = {
   ...errorConfig,
+  requestInterceptors: [
+    // 直接写一个 function，作为拦截器
+    (url: string, options: any) => {
+      const token = getStorage('token');
+      // do something
+      if (token) {
+        options.headers = {
+          ...options.headers,
+          Authorization: 'Bearer ' + token,
+        };
+      }
+
+      return { url, options };
+    },
+  ],
 };
