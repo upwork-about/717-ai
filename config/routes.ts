@@ -59,7 +59,7 @@ export default [
     path: '/configure',
     routes: [
       {
-        path: '/configure',
+        path: '/configure/agreement',
         name: 'Agreements',
         component: './Configure',
       },

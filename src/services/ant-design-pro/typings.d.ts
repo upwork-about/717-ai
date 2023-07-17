@@ -21,6 +21,17 @@ declare namespace API {
     pageSize?: number;
   };
 
+  type ConfigAgreementItem = {
+    id: number;
+    display_id: string;
+    agreement_type: string;
+    agreement_subtype: string;
+    created_by: string;
+    creation_datetime: string;
+    last_edited_date: string;
+    last_edited_by: string;
+    status: string;
+  };
   type RuleListItem = {
     key?: number;
     disabled?: boolean;

@@ -23,7 +23,7 @@ import TableFormBlock from '@/components/TableFormBlock';
  * @zh-CN 添加节点
  * @param fields
  */
-const handleAdd = async (fields: API.RuleListItem) => {
+const handleAdd = async (fields: API.ConfigAgreementItem) => {
   const hide = message.loading('正在添加');
   try {
     await addRule({ ...fields });
@@ -47,9 +47,7 @@ const handleUpdate = async (fields: FormValueType) => {
   const hide = message.loading('Configuring');
   try {
     await updateRule({
-      name: fields.name,
-      desc: fields.desc,
-      key: fields.key,
+      name: fields.display_id,
     });
     hide();
 
@@ -68,7 +66,7 @@ const handleUpdate = async (fields: FormValueType) => {
  *
  * @param selectedRows
  */
-const handleRemove = async (selectedRows: API.RuleListItem[]) => {
+const handleRemove = async (selectedRows: API.ConfigAgreementItem[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
@@ -100,8 +98,8 @@ const TableList: React.FC = () => {
   const [showDetail, setShowDetail] = useState<boolean>(false);
 
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<API.RuleListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<API.RuleListItem[]>([]);
+  const [currentRow, setCurrentRow] = useState<API.ConfigAgreementItem>();
+  const [selectedRowsState, setSelectedRows] = useState<API.ConfigAgreementItem[]>([]);
 
   /**
    * @en-US International configuration
@@ -109,12 +107,24 @@ const TableList: React.FC = () => {
    * */
   const intl = useIntl();
 
-  const columns: ProColumns<API.RuleListItem>[] = [
+  const columns: ProColumns<API.ConfigAgreementItem>[] = [
     {
       title: 'Configuration ID',
       dataIndex: 'display_id',
       tip: 'The rule name is the unique key',
       valueType: 'textarea',
+      render: (dom, entity) => {
+        return (
+          <a
+            onClick={() => {
+              setCurrentRow(entity);
+              setShowDetail(true);
+            }}
+          >
+            {dom}
+          </a>
+        );
+      },
     },
     {
       title: 'Type',
@@ -151,6 +161,22 @@ const TableList: React.FC = () => {
       title: 'Status',
       dataIndex: 'status',
       valueType: 'text',
+    },
+    {
+      title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="Operating" />,
+      dataIndex: 'option',
+      valueType: 'option',
+      render: (_, record) => [
+        <a
+          key="config"
+          onClick={() => {
+            handleUpdateModalOpen(true);
+            setCurrentRow(record);
+          }}
+        >
+          <FormattedMessage id="pages.searchTable.config" defaultMessage="Configuration" />
+        </a>,
+      ],
     },
   ];
 
@@ -192,7 +218,7 @@ const TableList: React.FC = () => {
         open={createModalOpen}
         onOpenChange={handleModalOpen}
         onFinish={async (value) => {
-          const success = await handleAdd(value as API.RuleListItem);
+          const success = await handleAdd(value as API.ConfigAgreementItem);
           if (success) {
             handleModalOpen(false);
             if (actionRef.current) {
@@ -248,17 +274,17 @@ const TableList: React.FC = () => {
         }}
         closable={false}
       >
-        {currentRow?.name && (
-          <ProDescriptions<API.RuleListItem>
+        {currentRow?.display_id && (
+          <ProDescriptions<API.ConfigAgreementItem>
             column={2}
-            title={currentRow?.name}
+            title={currentRow?.display_id}
             request={async () => ({
               data: currentRow || {},
             })}
             params={{
-              id: currentRow?.name,
+              id: currentRow?.display_id,
             }}
-            columns={columns as ProDescriptionsItemProps<API.RuleListItem>[]}
+            columns={columns as ProDescriptionsItemProps<API.ConfigAgreementItem>[]}
           />
         )}
       </Drawer>
