@@ -11,6 +11,7 @@ import { errorConfig } from './requestErrorConfig';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import { getStorage } from './utils';
 import Agreement from '@/pages/Agreement';
+import { getAgreementType } from './services/ant-design-pro/agreement';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -62,7 +63,6 @@ export async function getInitialState(): Promise<{
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
-  // const { getTypeCount } = useModel('agreement');
   return {
     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {
@@ -78,22 +78,22 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       },
       request: async (params, defaultMenuData) => {
         // initialState.currentUser 中包含了所有用户信息
-        // console.log(defaultMenuData, 'defaultMenuData');
-        // const menuData = await getTypeCount();
-        // let agreementRouteIndex = defaultMenuData.findIndex((item) => item.name === 'agreements');
-        // defaultMenuData[agreementRouteIndex].routes = menuData?.map((item) => {
-        //   return {
-        //     path: `/agreements/${item.name.toLowerCase()}`,
-        //     name: `${item.name} (${item.count})`,
-        //   };
-        // });
+        console.log(defaultMenuData, 'defaultMenuData');
+        const menuData = (await getAgreementType()) as any[];
+        let agreementRouteIndex = defaultMenuData.findIndex((item) => item.name === 'agreements');
+        defaultMenuData[agreementRouteIndex].routes = menuData?.map((item) => {
+          return {
+            path: `/agreements/${item.name.toLowerCase()}`,
+            name: `${item.name} (${item.count})`,
+          };
+        });
         // console.log(defaultMenuData, 'defaultMenuData');
         return defaultMenuData;
       },
     },
-    waterMarkProps: {
-      content: initialState?.currentUser?.user,
-    },
+    // waterMarkProps: {
+    //   content: initialState?.currentUser?.user,
+    // },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
