@@ -5,15 +5,15 @@ import { PlusOutlined } from '@ant-design/icons';
 import { getAgreements } from '@/services/ant-design-pro/agreement';
 const BalanceForm: React.FC = () => {
   const columns = [
-    { title: 'Agreement ID', dataIndex: 'Agreement ID', valueType: 'text' },
-    { title: 'Agreement Type', dataIndex: 'Agreement Type', valueType: 'text' },
-    { title: 'Agreement Subtype', dataIndex: 'Agreement Subtype', valueType: 'text' },
-    { title: 'Agreement Number', dataIndex: 'Agreement Number', valueType: 'text' },
-    { title: 'Agreement Start Date', dataIndex: 'Agreement Start Date', valueType: 'text' },
-    { title: 'Agreement Value', dataIndex: 'Agreement Value', valueType: 'text' },
-    { title: 'Customer', dataIndex: 'Customer', valueType: 'text' },
-    { title: 'Created At', dataIndex: 'Created At', valueType: 'text' },
-    { title: 'Status', dataIndex: 'Status', valueType: 'text' },
+    { title: 'Agreement ID', dataIndex: 'display_id', valueType: 'text' },
+    { title: 'Agreement Type', dataIndex: 'agreement_type', valueType: 'text' },
+    { title: 'Agreement Subtype', dataIndex: 'agreement_subtype', valueType: 'text' },
+    { title: 'Agreement Number', dataIndex: 'number', valueType: 'text' },
+    { title: 'Agreement Start Date', dataIndex: 'start_date', valueType: 'text' },
+    { title: 'Agreement Value', dataIndex: 'value', valueType: 'text' },
+    { title: 'Customer', dataIndex: 'customer', valueType: 'text' },
+    { title: 'Created At', dataIndex: 'created_at', valueType: 'text' },
+    { title: 'Status', dataIndex: 'status', valueType: 'text' },
   ];
   return (
     <TableFormBlock
