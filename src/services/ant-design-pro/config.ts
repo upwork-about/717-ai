@@ -26,3 +26,13 @@ export async function getDataTypes(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+export async function getMasterData(options: { tab: 1 | 2 | 3; query?: any }) {
+  let url = `/api/masterdata/${options.tab}`;
+  if (options.query) {
+    url = url + options.query;
+  }
+  return request<Record<string, any>>(url, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
