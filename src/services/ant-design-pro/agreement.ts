@@ -9,3 +9,9 @@ export async function getAgreementType(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+export async function getAgreements(options?: { [key: string]: any }) {
+  return request<Record<string, any>>('/api/agreements', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

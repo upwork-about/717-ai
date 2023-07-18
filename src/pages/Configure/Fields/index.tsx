@@ -4,6 +4,7 @@ import TableFormBlock from '@/components/TableFormBlock';
 import { getFields } from '@/services/ant-design-pro/config';
 import {
   ActionType,
+  PageContainer,
   ProColumns,
   ProDescriptions,
   ProDescriptionsItemProps,
@@ -109,7 +110,7 @@ const BalanceForm: React.FC = () => {
     }
   };
   return (
-    <div className="wrap">
+    <PageContainer>
       <TableFormBlock
         actionRef={actionRef}
         columns={columns}
@@ -164,7 +165,7 @@ const BalanceForm: React.FC = () => {
           />
         )}
       </Drawer>
-    </div>
+    </PageContainer>
   );
 };
 export default BalanceForm;
