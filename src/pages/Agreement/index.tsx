@@ -10,13 +10,15 @@ import {
   ProFormTextArea,
   ProTable,
 } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
+import { FormattedMessage, useIntl, useParams, useRequest } from '@umijs/max';
 import { Button, Drawer, Input, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import TableFormBlock from '@/components/TableFormBlock';
 import { getAgreementType } from '@/services/ant-design-pro/agreement';
 import Agreement from './item/Agreement';
 const TableList: React.FC = () => {
+  const params = useParams();
+  const id = params.id;
   const { data, error, loading } = useRequest(async () => {
     let res = await getAgreementType();
     return { data: res };
@@ -25,11 +27,15 @@ const TableList: React.FC = () => {
 
   const tabList = data?.map((item: any) => {
     return {
+      name: item.name,
       tab: `${item.name}(${item.count})`,
-      key: item.id,
+      key: item.id.toString(),
       children: <Agreement name={item.name} />,
     };
   });
+
+  const activeKey = tabList?.find((item: any) => item.name.toLowerCase() === id)?.key;
+  console.log(activeKey, 'activeKey');
   return (
     // <PageContainer>
     //   <TableFormBlock />
@@ -39,6 +45,7 @@ const TableList: React.FC = () => {
       header={{
         title: 'Master Data Configuration',
       }}
+      tabActiveKey={activeKey}
       tabList={tabList}
     ></PageContainer>
   );
