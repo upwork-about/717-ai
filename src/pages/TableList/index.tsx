@@ -145,11 +145,7 @@ const TableList: React.FC = () => {
       dataIndex: 'callNo',
       sorter: true,
       hideInForm: true,
-      renderText: (val: string) =>
-        `${val}${intl.formatMessage({
-          id: 'pages.searchTable.tenThousand',
-          defaultMessage: ' 万 ',
-        })}`,
+      renderText: (val: string) => `万`,
     },
     {
       title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="Status" />,
@@ -204,15 +200,7 @@ const TableList: React.FC = () => {
           return false;
         }
         if (`${status}` === '3') {
-          return (
-            <Input
-              {...rest}
-              placeholder={intl.formatMessage({
-                id: 'pages.searchTable.exception',
-                defaultMessage: 'Please enter the reason for the exception!',
-              })}
-            />
-          );
+          return <Input {...rest} placeholder={'Please enter the reason for the exception!'} />;
         }
         return defaultRender(item);
       },
@@ -244,10 +232,7 @@ const TableList: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<API.RuleListItem, API.PageParams>
-        headerTitle={intl.formatMessage({
-          id: 'pages.searchTable.title',
-          defaultMessage: 'Enquiry form',
-        })}
+        headerTitle={'Enquiry form'}
         actionRef={actionRef}
         rowKey="key"
         search={{
@@ -312,10 +297,7 @@ const TableList: React.FC = () => {
         </FooterToolbar>
       )}
       <ModalForm
-        title={intl.formatMessage({
-          id: 'pages.searchTable.createForm.newRule',
-          defaultMessage: 'New rule',
-        })}
+        title={'New rule'}
         width="400px"
         open={createModalOpen}
         onOpenChange={handleModalOpen}

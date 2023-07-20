@@ -85,16 +85,20 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       },
       request: async (params, defaultMenuData) => {
         // initialState.currentUser 中包含了所有用户信息
-        console.log(defaultMenuData, 'defaultMenuData');
         const menuData = (await getAgreementType()) as any[];
         let agreementRouteIndex = defaultMenuData.findIndex((item) => item.name === 'agreements');
-        defaultMenuData[agreementRouteIndex].routes = menuData?.map((item) => {
+        let routes = menuData?.map((item) => {
           return {
             path: `/agreements/${item.name.toLowerCase()}`,
             name: `${item.name} (${item.count})`,
           };
         });
-        // console.log(defaultMenuData, 'defaultMenuData');
+        // routes.push({
+        //   path: `/agreements/all`,
+        //   name: `All`,
+        // });
+        defaultMenuData[agreementRouteIndex].routes = routes;
+        console.log(defaultMenuData, 'defaultMenuData');
         return defaultMenuData;
       },
     },

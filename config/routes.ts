@@ -60,17 +60,17 @@ export default [
     routes: [
       {
         path: '/configure/agreement',
-        name: 'Agreements',
+        name: 'agreements',
         component: './Configure',
       },
       {
         path: '/configure/fields',
-        name: 'Fields',
+        name: 'fields',
         component: './Configure/Fields',
       },
       {
         path: '/configure/master-data',
-        name: 'Master Data',
+        name: 'master',
         component: './Configure/MasterData',
       },
     ],
@@ -82,27 +82,27 @@ export default [
     routes: [
       {
         path: '/admin/security',
-        name: 'Security',
+        name: 'security',
       },
       {
         path: '/admin/notifications',
-        name: 'Notifications',
+        name: 'notifications',
       },
       {
         path: '/admin/data-import',
-        name: 'Data Import',
+        name: 'data-import',
       },
       {
         path: '/admin/data-repository',
-        name: 'Data Repository',
+        name: 'data-repository',
       },
       {
         path: '/admin/integrations',
-        name: 'Integrations',
+        name: 'integrations',
       },
       {
         path: '/admin/content-network',
-        name: 'Content Network',
+        name: 'content-network',
       },
     ],
   },
