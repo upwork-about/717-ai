@@ -12,6 +12,7 @@ import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import { getStorage } from './utils';
 import Agreement from '@/pages/Agreement';
 import { getAgreementType } from './services/ant-design-pro/agreement';
+import '@/assets/css/index.css';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -64,6 +65,12 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
+    token: {
+      sider: {
+        colorMenuBackground: '#101828',
+      },
+    },
+
     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {
       title: <AvatarName />,
@@ -91,6 +98,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         return defaultMenuData;
       },
     },
+
     // waterMarkProps: {
     //   content: initialState?.currentUser?.user,
     // },

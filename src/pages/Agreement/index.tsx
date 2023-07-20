@@ -1,16 +1,8 @@
 import { addRule, removeRule, rule, updateRule } from '@/services/ant-design-pro/api';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
-import {
-  FooterToolbar,
-  ModalForm,
-  PageContainer,
-  ProDescriptions,
-  ProFormText,
-  ProFormTextArea,
-  ProTable,
-} from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useParams, useRequest } from '@umijs/max';
+import { PageContainer } from '@ant-design/pro-components';
+import { history, useIntl, useParams, useRequest } from '@umijs/max';
 import { Button, Drawer, Input, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import TableFormBlock from '@/components/TableFormBlock';
@@ -29,12 +21,12 @@ const TableList: React.FC = () => {
     return {
       name: item.name,
       tab: `${item.name}(${item.count})`,
-      key: item.id.toString(),
+      key: item.name.toLowerCase(),
       children: <Agreement name={item.name} />,
     };
   });
 
-  const activeKey = tabList?.find((item: any) => item.name.toLowerCase() === id)?.key;
+  const activeKey = tabList?.find((item: any) => item.key === id)?.key;
   console.log(activeKey, 'activeKey');
   return (
     // <PageContainer>
@@ -42,11 +34,9 @@ const TableList: React.FC = () => {
     // </PageContainer>
     <PageContainer
       fixedHeader
-      header={{
-        title: 'Master Data Configuration',
-      }}
       tabActiveKey={activeKey}
       tabList={tabList}
+      onTabChange={(activeTabKey) => history.push(`/agreements/${activeTabKey}`)}
     ></PageContainer>
   );
 };

@@ -17,6 +17,7 @@ const BalanceForm: React.FC = () => {
   ];
   return (
     <TableFormBlock
+      headerTitle="Recent Agreements"
       rowKey="id"
       search={{
         labelWidth: 120,

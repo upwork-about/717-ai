@@ -76,19 +76,33 @@ export default [
     ],
   },
   {
-    path: '/admin',
     name: 'admin',
     icon: 'crown',
-    // access: 'canAdmin',
+    component: './Admin',
     routes: [
       {
-        path: '/admin',
-        redirect: '/admin/sub-page',
+        path: '/admin/security',
+        name: 'Security',
       },
       {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        component: './Admin',
+        path: '/admin/notifications',
+        name: 'Notifications',
+      },
+      {
+        path: '/admin/data-import',
+        name: 'Data Import',
+      },
+      {
+        path: '/admin/data-repository',
+        name: 'Data Repository',
+      },
+      {
+        path: '/admin/integrations',
+        name: 'Integrations',
+      },
+      {
+        path: '/admin/content-network',
+        name: 'Content Network',
       },
     ],
   },

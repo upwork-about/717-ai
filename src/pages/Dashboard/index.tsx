@@ -21,7 +21,7 @@ const Dashboard: React.FC = () => {
           <Calendar />;
         </ProCard>
       </ProCard>
-      <ProCard style={{ height: '100%' }} colSpan={12} bordered title="Recent Agreements">
+      <ProCard style={{ height: '100%' }} colSpan={12} bordered>
         <TableAgreement />
       </ProCard>
     </ProCard>

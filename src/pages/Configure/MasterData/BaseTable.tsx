@@ -6,14 +6,16 @@ import { getMasterData } from '@/services/ant-design-pro/config';
 const BaseTable: React.FC<{ tab: 1 | 2 | 3; query: string }> = ({ tab, query }) => {
   const actionRef = useRef<ActionType>();
   const [columns, setColumns] = useState([]);
-  const [currentRow, setCurrentRow] = useState<any>();
-  const [showDetail, setShowDetail] = useState(false);
+
   return (
     <div className="wrap">
       <TableFormBlock
         actionRef={actionRef}
         columns={columns}
-        scroll={{ x: 1800 }}
+        search={{
+          filterType: 'light',
+        }}
+        scroll={{ x: 2600 }}
         rowSelection={{}}
         request={async () => {
           let res = await getMasterData({
@@ -27,63 +29,22 @@ const BaseTable: React.FC<{ tab: 1 | 2 | 3; query: string }> = ({ tab, query }) 
             dataIndex: item,
             valueType: 'text',
             ellipsis: true,
-            width: 150,
+            colProps: { span: item === 'Prescription' ? 24 : 12 },
           }));
-          newColumns.push({
-            title: 'Actions',
-            fixed: 'right',
-            render: (_: string, record: Record<string, any>) => [
-              <a
-                key="config"
-                onClick={() => {
-                  console.log(record, 'record');
-                  setShowDetail(true);
-                  setCurrentRow(record);
-                }}
-              >
-                View
-              </a>,
-            ],
-          });
+
           setColumns(newColumns);
-          const data = Object.values(res.items).map((item: any) => {
-            const obj: any = {};
-            item.forEach((it: any) => {
-              obj[it.name] = it.value;
-            });
-            return obj;
-          });
+          const data =
+            Object.values(res.items)?.map((item: any) => {
+              const obj: any = {};
+              item.forEach((it: any) => {
+                obj[it.name] = it.value;
+              });
+              return obj;
+            }) || [];
+          console.log(data, 'data');
           return { data: data as any[], success: true, total: res.length };
         }}
       />
-      <Drawer
-        width={600}
-        open={showDetail}
-        onClose={() => {
-          setCurrentRow(undefined);
-          setShowDetail(false);
-        }}
-        closable={false}
-      >
-        {currentRow && (
-          <ProDescriptions<any>
-            column={2}
-            title={currentRow?.display_id}
-            request={async () => ({
-              data: currentRow || {},
-            })}
-            params={{
-              id: currentRow?.display_id,
-            }}
-            columns={columns.map((item: any) => {
-              if (item.dataIndex === 'Prescription') {
-                return { ...item, ellipsis: false, span: 2 };
-              }
-              return { ...item, ellipsis: false };
-            })}
-          />
-        )}
-      </Drawer>
     </div>
   );
 };
