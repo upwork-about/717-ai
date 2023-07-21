@@ -8,6 +8,30 @@ export async function getConfigAgreement(options?: { [key: string]: any }) {
     ...(options || {}),
   });
 }
+export async function createConfigAgreement(options?: { [key: string]: any }) {
+  return request<Record<string, any>>('/api/v1/config/agreements', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+export async function getFormType(options?: { [key: string]: any }) {
+  return request<Record<string, any>>('/api/v1/utils/form/types', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+export async function getAgreementsConfigDetail(options?: { [key: string]: any }) {
+  return request<Record<string, any>>('/api/v1/config/agreements/details', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+export async function deleteConfigAgreement(id: number, options?: { [key: string]: any }) {
+  return request<Record<string, any>>(`/api/v1/config/agreements/${id}`, {
+    method: 'DELETE',
+    ...(options || {}),
+  });
+}
 export async function getFields(options?: { [key: string]: any }) {
   return request<Record<string, any>>('/api/v1/config/fields', {
     method: 'GET',

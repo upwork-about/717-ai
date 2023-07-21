@@ -1,20 +1,28 @@
 import { BetaSchemaForm, ProColumns, TableDropdown } from '@ant-design/pro-components';
 import { TableFormBlockProps } from './types';
 import { ReactNode } from 'react';
+import { notification } from 'antd';
 
 export const getColumns = (props: TableFormBlockProps) => {
   if (props.actions === false) {
     return props.columns;
   }
-  const actions = props.actions ?? ['view', 'edit', 'duplicate', 'delete'];
+
+  const { createSchema, createRequest, updateRequest, deleteRequest, duplicateRequest } =
+    props.operation || {};
+  let actions = props.actions?.btnList ?? ['view', 'edit', 'duplicate', 'delete'];
 
   const isStringTitle = typeof props.headerTitle === 'string';
+
   const columnsActions: ProColumns = {
     title: 'Actions',
     fixed: 'right',
     dataIndex: 'options',
     valueType: 'option',
     render: (_: ReactNode, record: Record<string, any>) => {
+      if ((props.actions as any)?.renderBefore) {
+        actions = (props.actions as any)?.renderBefore(record);
+      }
       let stragety = {
         view: (
           <BetaSchemaForm<any>
@@ -95,7 +103,15 @@ export const getColumns = (props: TableFormBlockProps) => {
         delete: (
           <TableDropdown
             key="actionGroup"
-            onSelect={() => (props.actionRef as any).current?.reload()}
+            onSelect={async (value) => {
+              console.log(value, 'values');
+              if (value === 'delete') {
+                let res = await deleteRequest?.(record);
+                if (res) {
+                  (props.actionRef as any)?.current?.reload();
+                }
+              }
+            }}
             menus={[{ key: 'delete', name: '删除' }]}
           />
         ),

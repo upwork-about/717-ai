@@ -1,11 +1,14 @@
-import React, { ReactNode, useState } from 'react';
-import { BetaSchemaForm, ProTable } from '@ant-design/pro-components';
+import React, { ReactNode, useRef, useState } from 'react';
+import { ActionType, BetaSchemaForm, ProTable } from '@ant-design/pro-components';
 import { TableFormBlockProps } from './types';
 import { getColumns } from './utils';
-import { Button } from 'antd';
+import { Button, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 const TableFormBlock: React.FC<TableFormBlockProps> = (props) => {
   const isStringTitle = typeof props.headerTitle === 'string';
+  const { createSchema, createRequest, updateRequest, deleteRequest, duplicateRequest } =
+    props.operation || {};
+  console.log(createSchema, 'createSchema');
   const props_ = {
     ...props,
     columns: getColumns(props),
@@ -33,8 +36,16 @@ const TableFormBlock: React.FC<TableFormBlockProps> = (props) => {
         grid={true}
         onFinish={async (values) => {
           console.log(values);
+          let res = await createRequest?.(values);
+          if (res) {
+            notification.success({
+              message: 'success create',
+            });
+            (props.actionRef as any)?.current?.reload();
+            return true;
+          }
         }}
-        columns={props.columns as any}
+        columns={createSchema || (props.columns as any)}
       />,
     ],
   };
