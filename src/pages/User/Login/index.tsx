@@ -21,7 +21,7 @@ import { Alert, message, Tabs } from 'antd';
 import Settings from '../../../../config/defaultSettings';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
-import { setStorage } from '@/utils';
+import { encryptPassword, setStorage } from '@/utils';
 
 const ActionIcons = () => {
   const langClassName = useEmotionCss(({ token }) => {
@@ -128,7 +128,10 @@ const Login: React.FC = () => {
     try {
       console.log(values, 'values');
       // 登录
-      const loginRes = await login({ ...values, type });
+      const loginRes = await login({
+        email: values.email,
+        password: encryptPassword(values.password!),
+      });
       if (loginRes.status === 'success') {
         const defaultLoginSuccessMessage = 'login success';
         message.success(defaultLoginSuccessMessage);

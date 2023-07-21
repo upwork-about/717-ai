@@ -177,6 +177,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const request: RequestConfig = {
+  baseURL: 'https://pilot.lambdax.ai',
   ...errorConfig,
   requestInterceptors: [
     // 直接写一个 function，作为拦截器

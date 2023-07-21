@@ -29,6 +29,9 @@ dependencies:
   classnames:
     specifier: ^2.3.2
     version: 2.3.2
+  crypto-js:
+    specifier: ^4.1.1
+    version: registry.npmmirror.com/crypto-js@4.1.1
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -67,6 +70,9 @@ devDependencies:
   '@types/classnames':
     specifier: ^2.3.1
     version: 2.3.1
+  '@types/crypto-js':
+    specifier: ^4.1.1
+    version: registry.npmmirror.com/@types/crypto-js@4.1.1
   '@types/express':
     specifier: ^4.17.17
     version: 4.17.17
@@ -19547,6 +19553,12 @@ packages:
       '@babel/types': registry.npmmirror.com/@babel/types@7.22.5
     dev: true
 
+  registry.npmmirror.com/@types/crypto-js@4.1.1:
+    resolution: {integrity: sha512-BG7fQKZ689HIoc5h+6D2Dgq1fABRa0RbBWKBd9SP/MVRVXROflpm5fhwyATX5duFmbStzyzyycPB8qUYKDH3NA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/crypto-js/-/crypto-js-4.1.1.tgz}
+    name: '@types/crypto-js'
+    version: 4.1.1
+    dev: true
+
   registry.npmmirror.com/@types/d3-timer@2.0.1:
     resolution: {integrity: sha512-TF8aoF5cHcLO7W7403blM7L1T+6NF3XMyN3fxyUolq2uOcFeicG/khQg/dGxiCJWoAcmYulYN7LYSRKO54IXaA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/d3-timer/-/d3-timer-2.0.1.tgz}
     name: '@types/d3-timer'
@@ -21715,6 +21727,12 @@ packages:
       randombytes: registry.npmmirror.com/randombytes@2.1.0
       randomfill: registry.npmmirror.com/randomfill@1.0.4
     dev: true
+
+  registry.npmmirror.com/crypto-js@4.1.1:
+    resolution: {integrity: sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/crypto-js/-/crypto-js-4.1.1.tgz}
+    name: crypto-js
+    version: 4.1.1
+    dev: false
 
   registry.npmmirror.com/css-blank-pseudo@3.0.3(postcss@8.4.26):
     resolution: {integrity: sha512-VS90XWtsHGqoM0t4KpH053c4ehxZ2E6HtGI7x68YFV0pTo/QmkV/YFA+NnlvK8guxZVNWGQhVNJGC39Q8XF4OQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/css-blank-pseudo/-/css-blank-pseudo-3.0.3.tgz}
