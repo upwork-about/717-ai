@@ -130,9 +130,7 @@ const TableList: React.FC = () => {
       fieldProps: {
         mode: 'multiple',
       },
-      convertValue: (value: string) => {
-        return value?.split(',');
-      },
+
       request: async () => {
         let res = await getFormType();
         if (res) {
@@ -153,9 +151,6 @@ const TableList: React.FC = () => {
       fieldProps: {
         mode: 'multiple',
         options: data?.steps.map((item: any) => ({ label: item.name, value: item.id })),
-      },
-      convertValue: (value: any) => {
-        return value?.map((item: any) => item.id);
       },
     },
   ];
@@ -416,6 +411,7 @@ const TableList: React.FC = () => {
         ]}
         request={async () => {
           let res = await getConfigAgreement();
+
           console.log(res, 'res');
           return { data: res as any[], success: true, total: res.length };
         }}
