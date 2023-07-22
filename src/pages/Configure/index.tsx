@@ -14,10 +14,12 @@ import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { Button, Drawer, Input, Tag, message, notification } from 'antd';
 import React, { ReactNode, useRef, useState } from 'react';
 import {
+  copyConfigAgreement,
   createConfigAgreement,
   deleteConfigAgreement,
   getAgreementsConfigDetail,
   getConfigAgreement,
+  getConfigFields,
   getFormType,
 } from '@/services/ant-design-pro/config';
 import TableFormBlock from '@/components/TableFormBlock';
@@ -50,13 +52,13 @@ const TableList: React.FC = () => {
     {
       title: 'Created By',
       dataIndex: 'created_by',
-      valueType: 'dateTime',
+      valueType: 'text',
     },
     {
       title: 'Last Edited Date',
       sorter: true,
       dataIndex: 'last_edited_date',
-      valueType: 'dateTime',
+      valueType: 'text',
     },
     {
       title: 'Last Edited By',
@@ -66,7 +68,7 @@ const TableList: React.FC = () => {
     {
       title: 'Created At',
       dataIndex: 'creation_datetime',
-      valueType: 'dateTime',
+      valueType: 'text',
     },
     {
       title: 'Status',
@@ -128,6 +130,9 @@ const TableList: React.FC = () => {
       fieldProps: {
         mode: 'multiple',
       },
+      convertValue: (value: string) => {
+        return value?.split(',');
+      },
       request: async () => {
         let res = await getFormType();
         if (res) {
@@ -149,6 +154,241 @@ const TableList: React.FC = () => {
         mode: 'multiple',
         options: data?.steps.map((item: any) => ({ label: item.name, value: item.id })),
       },
+      convertValue: (value: any) => {
+        return value?.map((item: any) => item.id);
+      },
+    },
+  ];
+
+  const updateSchema = [
+    {
+      valueType: 'dependency',
+      name: ['steps', 'id'],
+      columns: ({ steps, id }) => {
+        return [
+          {
+            title: 'Section',
+            valueType: 'group',
+            colProps: {
+              span: 24,
+            },
+            columns: [
+              {
+                title: 'Header',
+                valueType: 'formList',
+                dataIndex: 'sections',
+                colProps: {
+                  span: 24,
+                },
+                columns: [
+                  {
+                    valueType: 'group',
+                    colProps: {
+                      span: 24,
+                    },
+                    columns: [
+                      {
+                        title: 'Name',
+                        dataIndex: 'name',
+                        valueType: 'text',
+                        colProps: {
+                          span: 6,
+                        },
+                        formItemProps: {
+                          rules: [
+                            {
+                              required: true,
+                              message: '此项为必填项',
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        title: 'Fields',
+                        dataIndex: 'fields',
+                        valueType: 'select',
+                        colProps: {
+                          span: 18,
+                        },
+                        fieldProps: {
+                          mode: 'multiple',
+                        },
+                        request: async () => {
+                          let res = await getConfigFields({
+                            mapped_to: 'header',
+                            config_id: id,
+                          });
+                          if (res) {
+                            return res?.map((item: any) => {
+                              return {
+                                label: item.name,
+                                value: item.id,
+                              };
+                            });
+                          }
+                          return [];
+                        },
+                        formItemProps: {
+                          rules: [
+                            {
+                              required: true,
+                              message: '此项为必填项',
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ];
+      },
+    },
+    {
+      valueType: 'dependency',
+      name: ['steps', 'id'],
+      dataIndex: 'steps',
+      columns: ({ steps, id }) => {
+        console.log(steps, id, 'idsteps');
+        const stragery: any = {
+          1: 'line-item',
+          2: 'clause',
+          3: 'line-item',
+          4: 'header',
+        };
+        let stepsArr = steps.map((item: any) => ({
+          id: item.id,
+          name: item.name,
+          key: stragery[item.id] || 'header',
+        }));
+
+        const sectionArr = stepsArr?.map((step: any, index: number) => {
+          return {
+            title: step?.name,
+            valueType: 'formList',
+            dataIndex: `step${step.id}`,
+
+            colProps: {
+              span: 24,
+            },
+            columns: [
+              {
+                valueType: 'group',
+                colProps: {
+                  span: 24,
+                },
+                columns: [
+                  {
+                    title: 'Name',
+                    dataIndex: 'name',
+                    valueType: 'text',
+                    colProps: {
+                      span: 6,
+                    },
+                    formItemProps: {
+                      rules: [
+                        {
+                          required: true,
+                          message: '此项为必填项',
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    title: 'Fields',
+                    dataIndex: 'fields',
+                    valueType: 'select',
+                    colProps: {
+                      span: 18,
+                    },
+                    fieldProps: {
+                      mode: 'multiple',
+                    },
+                    request: async () => {
+                      let res = await getConfigFields({
+                        mapped_to: step.key,
+                        config_id: id,
+                      });
+                      if (res) {
+                        return res?.map((item: any) => {
+                          return {
+                            label: item.name,
+                            value: item.id,
+                          };
+                        });
+                      }
+                      return [];
+                    },
+                    formItemProps: {
+                      rules: [
+                        {
+                          required: true,
+                          message: '此项为必填项',
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+        });
+        return [
+          {
+            title: 'Steps',
+            valueType: 'group',
+            colProps: {
+              span: 24,
+            },
+            columns: sectionArr,
+          },
+        ];
+      },
+    },
+  ];
+  const duplicateSchema = [
+    {
+      title: 'Agreement Type',
+      dataIndex: 'agreement_type',
+      valueType: 'select',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '此项为必填项',
+          },
+        ],
+      },
+
+      fieldProps: {
+        options: data?.types.map((item: any) => ({
+          label: item?.name,
+          value: item?.name,
+        })),
+      },
+    },
+    {
+      title: 'Agreement Subtype',
+      dataIndex: 'agreement_subtype',
+      valueType: 'select',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '此项为必填项',
+          },
+        ],
+      },
+      fieldProps: {
+        options: (
+          data?.types
+            ?.map(({ subtypes }: any) => subtypes)
+            .flat(1)
+            .filter(Boolean) || []
+        ).map((item: any) => ({ label: item?.name, value: item?.name })),
+      },
     },
   ];
   return (
@@ -163,7 +403,7 @@ const TableList: React.FC = () => {
             }
           },
         }}
-        headerTitle={'Enquiry form'}
+        headerTitle={'Agreement Configuration'}
         actionRef={actionRef}
         rowKey="id"
         search={{
@@ -181,8 +421,19 @@ const TableList: React.FC = () => {
         }}
         operation={{
           createSchema: createSchema as any,
+          updateSchema: updateSchema as any,
+          duplicateSchema: duplicateSchema as any,
           createRequest: async (values) => {
             let res = await createConfigAgreement({ data: values });
+            return res;
+          },
+          updateRequest: async (values) => {
+            console.log(values, 'values');
+            // let res = await createConfigAgreement({ data: values });
+            // return res;
+          },
+          duplicateRequest: async (values, record) => {
+            let res = await copyConfigAgreement(record.id, values);
             return res;
           },
           deleteRequest: async (record) => {

@@ -8,8 +8,15 @@ export const getColumns = (props: TableFormBlockProps) => {
     return props.columns;
   }
 
-  const { createSchema, createRequest, updateRequest, deleteRequest, duplicateRequest } =
-    props.operation || {};
+  const {
+    createSchema,
+    updateSchema,
+    duplicateSchema,
+    createRequest,
+    updateRequest,
+    deleteRequest,
+    duplicateRequest,
+  } = props.operation || {};
   let actions = props.actions?.btnList ?? ['view', 'edit', 'duplicate', 'delete'];
 
   const isStringTitle = typeof props.headerTitle === 'string';
@@ -72,14 +79,13 @@ export const getColumns = (props: TableFormBlockProps) => {
             onFinish={async (values) => {
               console.log(values);
             }}
-            columns={props.columns as any}
+            columns={updateSchema || (props.columns as any)}
           />
         ),
         duplicate: (
           <BetaSchemaForm<any>
-            key="edit"
+            key="duplicate"
             trigger={<a>Duplicate</a>}
-            initialValues={record}
             title={(isStringTitle ? 'Duplicate ' + props.headerTitle : props.headerTitle) as any}
             layoutType={'ModalForm'}
             steps={[
@@ -96,8 +102,16 @@ export const getColumns = (props: TableFormBlockProps) => {
             grid={true}
             onFinish={async (values) => {
               console.log(values);
+              let res = await duplicateRequest?.(values, record);
+              if (res) {
+                notification.success({
+                  message: 'success duplicate',
+                });
+                (props.actionRef as any)?.current?.reload();
+                return true;
+              }
             }}
-            columns={props.columns as any}
+            columns={duplicateSchema || (props.columns as any)}
           />
         ),
         delete: (

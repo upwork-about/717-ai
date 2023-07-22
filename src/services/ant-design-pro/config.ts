@@ -32,6 +32,24 @@ export async function deleteConfigAgreement(id: number, options?: { [key: string
     ...(options || {}),
   });
 }
+export async function updateConfigAgreement(id: number, data: any) {
+  return request<Record<string, any>>(`/api/v1/config/agreements/${id}`, {
+    method: 'PUT',
+    data,
+  });
+}
+export async function copyConfigAgreement(id: number, data: any) {
+  return request<Record<string, any>>(`/api/v1/config/agreements/copy/${id}`, {
+    method: 'POST',
+    data,
+  });
+}
+export async function getConfigFields(data: { mapped_to: string; config_id: string }) {
+  return request<Record<string, any>>(`/api/v1/config/fields`, {
+    method: 'GET',
+    params: data,
+  });
+}
 export async function getFields(options?: { [key: string]: any }) {
   return request<Record<string, any>>('/api/v1/config/fields', {
     method: 'GET',

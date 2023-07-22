@@ -11,9 +11,11 @@ export type TableFormBlockProps = ProTableProps<any, any, any> & {
     | false;
   operation?: {
     createSchema?: ProFormColumnsType[];
-    createRequest?: (data: any) => Promise<any>;
-    updateRequest?: (data: any) => Promise<any>;
-    deleteRequest?: (data: any) => Promise<any>;
-    duplicateRequest?: (data: any) => Promise<any>;
+    updateSchema?: ProFormColumnsType[];
+    duplicateSchema?: ProFormColumnsType[];
+    createRequest?: (data: any, record?: any) => Promise<any>;
+    updateRequest?: (data: any, record?: any) => Promise<any>;
+    deleteRequest?: (data: any, record?: any) => Promise<any>;
+    duplicateRequest?: (data: any, record?: any) => Promise<any>;
   };
 };
