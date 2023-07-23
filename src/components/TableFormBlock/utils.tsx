@@ -8,15 +8,10 @@ export const getColumns = (props: TableFormBlockProps) => {
     return props.columns;
   }
 
-  const {
-    createSchema,
-    updateSchema,
-    duplicateSchema,
-    createRequest,
-    updateRequest,
-    deleteRequest,
-    duplicateRequest,
-  } = props.operation || {};
+  const { dom, schema, request } = props.actions || {};
+  const { viewDom, editDom, duplicateDom } = dom || {};
+  const { createSchema, updateSchema, duplicateSchema } = schema || {};
+  const { createRequest, updateRequest, duplicateRequest, deleteRequest } = request || {};
   let actions = props.actions?.btnList ?? ['view', 'edit', 'duplicate', 'delete'];
 
   const isStringTitle = typeof props.headerTitle === 'string';
@@ -30,8 +25,9 @@ export const getColumns = (props: TableFormBlockProps) => {
       if ((props.actions as any)?.renderBefore) {
         actions = (props.actions as any)?.renderBefore(record);
       }
-      let stragety = {
-        view: (
+
+      let stragety: any = {
+        view: viewDom ?? (
           <BetaSchemaForm<any>
             key="view"
             readonly
@@ -57,7 +53,7 @@ export const getColumns = (props: TableFormBlockProps) => {
             columns={props.columns as any}
           />
         ),
-        edit: (
+        edit: editDom ?? (
           <BetaSchemaForm<any>
             key="edit"
             trigger={<a>Edit</a>}
@@ -82,7 +78,7 @@ export const getColumns = (props: TableFormBlockProps) => {
             columns={updateSchema || (props.columns as any)}
           />
         ),
-        duplicate: (
+        duplicate: duplicateDom ?? (
           <BetaSchemaForm<any>
             key="duplicate"
             trigger={<a>Duplicate</a>}
@@ -130,7 +126,13 @@ export const getColumns = (props: TableFormBlockProps) => {
           />
         ),
       };
-      return actions?.map((item) => stragety[item]);
+      return actions?.map((item: any) => {
+        if (['view', 'edit', 'duplicate', 'delete'].includes(item)) {
+          return stragety[item];
+        } else {
+          return item;
+        }
+      });
     },
   };
   return props.columns ? [...props.columns, columnsActions] : undefined;

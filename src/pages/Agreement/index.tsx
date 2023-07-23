@@ -17,14 +17,16 @@ const TableList: React.FC = () => {
   });
   console.log(data, 'agreementType');
 
-  const tabList = data?.map((item: any) => {
-    return {
-      name: item.name,
-      tab: `${item.name}(${item.count})`,
-      key: item.name.toLowerCase(),
-      children: <Agreement name={item.name} />,
-    };
-  });
+  const tabList = data
+    ?.filter((item: any) => item.count)
+    .map((item: any) => {
+      return {
+        name: item.name,
+        tab: `${item.name}(${item.count})`,
+        key: item.name.toLowerCase(),
+        children: <Agreement name={item.name} />,
+      };
+    });
 
   const activeKey = tabList?.find((item: any) => item.key === id)?.key;
   console.log(activeKey, 'activeKey');

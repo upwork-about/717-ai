@@ -6,8 +6,9 @@ import { Button, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 const TableFormBlock: React.FC<TableFormBlockProps> = (props) => {
   const isStringTitle = typeof props.headerTitle === 'string';
-  const { createSchema, createRequest, updateRequest, deleteRequest, duplicateRequest } =
-    props.operation || {};
+  const { schema, request } = props.actions || {};
+  const { createSchema, updateSchema, duplicateSchema } = schema || {};
+  const { createRequest, updateRequest, duplicateRequest, deleteRequest } = request || {};
   console.log(createSchema, 'createSchema');
   const props_ = {
     ...props,

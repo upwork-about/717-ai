@@ -10,7 +10,7 @@ import {
   ProFormTextArea,
   ProTable,
 } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
+import { FormattedMessage, request, useIntl, useRequest } from '@umijs/max';
 import { Button, Drawer, Input, Tag, message, notification } from 'antd';
 import React, { ReactNode, useRef, useState } from 'react';
 import {
@@ -23,6 +23,7 @@ import {
   getFormType,
 } from '@/services/ant-design-pro/config';
 import TableFormBlock from '@/components/TableFormBlock';
+import { TableFormActionsProps } from '@/components/TableFormBlock/types';
 
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -38,45 +39,57 @@ const TableList: React.FC = () => {
       dataIndex: 'display_id',
       tip: 'The rule name is the unique key',
       valueType: 'textarea',
+      sorter: true,
     },
     {
       title: 'Type',
       dataIndex: 'agreement_type',
       valueType: 'text',
+      sorter: true,
     },
     {
       title: 'Subtype',
       dataIndex: 'agreement_subtype',
       valueType: 'text',
+      sorter: true,
     },
     {
       title: 'Created By',
       dataIndex: 'created_by',
-      valueType: 'text',
+      valueType: 'dateTime',
+      sorter: true,
     },
     {
       title: 'Last Edited Date',
-      sorter: true,
       dataIndex: 'last_edited_date',
-      valueType: 'text',
+      valueType: 'dateTime',
+      sorter: true,
     },
     {
       title: 'Last Edited By',
       dataIndex: 'last_edited_by',
-      valueType: 'text',
+      valueType: 'dateTime',
+      sorter: true,
     },
     {
       title: 'Created At',
       dataIndex: 'creation_datetime',
-      valueType: 'text',
+      valueType: 'dateTime',
+      sorter: true,
     },
     {
       title: 'Status',
       dataIndex: 'status',
       render: (text: ReactNode, record: Record<string, any>) => {
-        const color = text === 'Draft' ? 'red' : 'blue';
+        const color = record.status === 'Draft' ? 'red' : 'blue';
 
         return <Tag color={color}>{text}</Tag>;
+      },
+      valueEnum: {
+        Draft: { text: 'Draft' },
+        Active: {
+          text: 'Active',
+        },
       },
     },
   ];
@@ -159,7 +172,7 @@ const TableList: React.FC = () => {
     {
       valueType: 'dependency',
       name: ['steps', 'id'],
-      columns: ({ steps, id }) => {
+      columns: ({ steps, id }: any) => {
         return [
           {
             title: 'Section',
@@ -245,7 +258,7 @@ const TableList: React.FC = () => {
       valueType: 'dependency',
       name: ['steps', 'id'],
       dataIndex: 'steps',
-      columns: ({ steps, id }) => {
+      columns: ({ steps, id }: any) => {
         console.log(steps, id, 'idsteps');
         const stragery: any = {
           1: 'line-item',
@@ -386,16 +399,72 @@ const TableList: React.FC = () => {
       },
     },
   ];
+
+  const exportRecord = async (record: Record<string, any>) => {
+    const api_url = `/export/config/${record.id}/agreements`;
+    try {
+      const response = await request(api_url, { method: 'GET' });
+      console.log(response, 'response');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      const timestamp = new Date().getTime();
+      link.download = `config_${record.id}_${timestamp}.xlsx`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      // no-op
+      console.log(error, 'error');
+    }
+  };
   return (
     <PageContainer>
       <TableFormBlock
         actions={{
           renderBefore: (record: Record<string, any>) => {
+            const actionDict = [
+              'view',
+              'edit',
+              <a key="export" onClick={() => exportRecord(record)}>
+                Export
+              </a>,
+              'duplicate',
+            ];
             if (record.status === 'Draft') {
-              return ['view', 'edit', 'duplicate', 'delete'];
-            } else {
-              return ['view', 'edit', 'duplicate'];
+              actionDict.push('delete');
             }
+            return actionDict;
+          },
+          schema: {
+            createSchema: createSchema as any,
+            updateSchema: updateSchema as any,
+            duplicateSchema: duplicateSchema as any,
+          },
+          request: {
+            createRequest: async (values) => {
+              let res = await createConfigAgreement({ data: values });
+              return res;
+            },
+            updateRequest: async (values) => {
+              console.log(values, 'values');
+              // let res = await createConfigAgreement({ data: values });
+              // return res;
+            },
+            duplicateRequest: async (values, record) => {
+              let res = await copyConfigAgreement(record.id, values);
+              return res;
+            },
+            deleteRequest: async (record) => {
+              let res = await deleteConfigAgreement(record.id);
+              if (res.status === 'success') {
+                notification.success({
+                  message: res.message,
+                });
+              }
+              return res;
+            },
           },
         }}
         headerTitle={'Agreement Configuration'}
@@ -414,33 +483,6 @@ const TableList: React.FC = () => {
 
           console.log(res, 'res');
           return { data: res as any[], success: true, total: res.length };
-        }}
-        operation={{
-          createSchema: createSchema as any,
-          updateSchema: updateSchema as any,
-          duplicateSchema: duplicateSchema as any,
-          createRequest: async (values) => {
-            let res = await createConfigAgreement({ data: values });
-            return res;
-          },
-          updateRequest: async (values) => {
-            console.log(values, 'values');
-            // let res = await createConfigAgreement({ data: values });
-            // return res;
-          },
-          duplicateRequest: async (values, record) => {
-            let res = await copyConfigAgreement(record.id, values);
-            return res;
-          },
-          deleteRequest: async (record) => {
-            let res = await deleteConfigAgreement(record.id);
-            if (res.status === 'success') {
-              notification.success({
-                message: res.message,
-              });
-            }
-            return res;
-          },
         }}
         columns={columns}
         rowSelection={{}}

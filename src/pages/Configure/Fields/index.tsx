@@ -1,7 +1,15 @@
 import React, { useRef, useState } from 'react';
 import TableFormBlock from '@/components/TableFormBlock';
-import { getFields } from '@/services/ant-design-pro/config';
+import {
+  getContextList,
+  getDataType,
+  getFields,
+  getPDFMappings,
+  getPDFMappingsContext,
+} from '@/services/ant-design-pro/config';
 import { ActionType, PageContainer, ProColumns } from '@ant-design/pro-components';
+import { ALPHANUMERIC_REGEX, FORM_TYPE_DATA } from './constants';
+import UpdateForm from './UpdateForm';
 const BalanceForm: React.FC = () => {
   const actionRef = useRef<ActionType>();
 
@@ -55,6 +63,11 @@ const BalanceForm: React.FC = () => {
           let res = await getFields();
           console.log(res, 'res');
           return { data: res as any[], success: true, total: res.length };
+        }}
+        actions={{
+          dom: {
+            editDom: <UpdateForm></UpdateForm>,
+          },
         }}
       />
     </PageContainer>
