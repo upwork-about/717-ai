@@ -10,7 +10,7 @@ import {
   ProFormTextArea,
   ProTable,
 } from '@ant-design/pro-components';
-import { FormattedMessage, request, useIntl, useRequest } from '@umijs/max';
+import { FormattedMessage, request, history, useRequest, useModel } from '@umijs/max';
 import { Button, Drawer, Input, Tag, message, notification } from 'antd';
 import React, { ReactNode, useRef, useState } from 'react';
 import {
@@ -27,11 +27,13 @@ import { TableFormActionsProps } from '@/components/TableFormBlock/types';
 
 const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
-  const { data, error, loading } = useRequest(async () => {
-    let res = await getAgreementsConfigDetail();
-    actionRef.current?.reload();
-    return { data: res };
-  });
+  // const { data, error, loading } = useRequest(async () => {
+  //   let res = await getAgreementsConfigDetail();
+  //   actionRef.current?.reload();
+  //   return { data: res };
+  // });
+
+  const { agreementConfigDetailOptions: data } = useModel('config');
 
   const columns: ProColumns<API.ConfigAgreementItem>[] = [
     {
@@ -426,7 +428,9 @@ const TableList: React.FC = () => {
           renderBefore: (record: Record<string, any>) => {
             const actionDict = [
               'view',
-              'edit',
+              <a key="edit" onClick={() => history.push(`/configure/agreement/${record.id}`)}>
+                Edit
+              </a>,
               <a key="export" onClick={() => exportRecord(record)}>
                 Export
               </a>,

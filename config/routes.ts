@@ -61,7 +61,13 @@ export default [
       {
         path: '/configure/agreement',
         name: 'agreements',
-        component: './Configure',
+        component: './Configure/Agreement',
+      },
+      {
+        path: '/configure/agreement/:id',
+        name: 'detail',
+        hideInMenu: true,
+        component: './Configure/Agreement/Detail',
       },
       {
         path: '/configure/fields',

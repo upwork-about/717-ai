@@ -26,10 +26,21 @@ export async function getAgreementsConfigDetail(options?: { [key: string]: any }
     ...(options || {}),
   });
 }
+export async function getAgreementsConfigDetailGeneral(id: number) {
+  return request<Record<string, any>>(`/config/agreements/${id}`, {
+    method: 'GET',
+  });
+}
 export async function deleteConfigAgreement(id: number, options?: { [key: string]: any }) {
   return request<Record<string, any>>(`/config/agreements/${id}`, {
     method: 'DELETE',
     ...(options || {}),
+  });
+}
+export async function updateConfigAgreementSetting(id: number, data: any) {
+  return request<Record<string, any>>(`/config/agreements/${id}/setting`, {
+    method: 'PUT',
+    data,
   });
 }
 export async function updateConfigAgreement(id: number, data: any) {
